@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+     Copyright 2022 Coop IT Easy
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <!-- add a new user group for department managers -->
+    <record id="group_employee_manager" model="res.groups">
+        <field name="name">Manager (has subordinates)</field>
+    </record>
+</odoo>
