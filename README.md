@@ -17,7 +17,11 @@ Odoo modules related to Human Resources management.
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[hr_auto_manager_group_membership](hr_auto_manager_group_membership/) | 12.0.1.0.0 |  | Automatically set employees with subordinates into a manager group
 
 [//]: # (end addons)
 
