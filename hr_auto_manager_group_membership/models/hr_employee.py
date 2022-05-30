@@ -4,11 +4,6 @@
 from odoo import api, models
 
 MANAGER_GROUP = "hr_auto_manager_group_membership.group_employee_manager"
-MANAGER_GROUP_DOMAIN = [
-    ("model", "=", "res.groups"),
-    ("module", "=", "hr_auto_manager_group_membership"),
-    ("name", "=", "group_employee_manager"),
-]
 
 
 class HrEmployee(models.Model):
@@ -30,6 +25,8 @@ class HrEmployee(models.Model):
         for rec, parent_id in zip(self, parent_ids):
             rec._update_manager_group_membership()
             if parent_id and parent_id != rec.parent_id:
+                # this employee has another manager: the previous manager must be
+                # removed from the group if they do not have subordinates anymore.
                 parent_id._update_manager_group_membership()
             if rec.parent_id:
                 rec.parent_id._update_manager_group_membership()
@@ -46,18 +43,20 @@ class HrEmployee(models.Model):
 
     @api.multi
     def _update_manager_group_membership(self):
-        manager_group_id = self._get_manager_group_id()
+        manager_group_id = self.env.ref(MANAGER_GROUP).id
         for rec in self:
             user = rec.user_id
             if not user:
                 continue
+            # is this employee currently a manager?
             is_manager = user.has_group(MANAGER_GROUP)
             if rec.child_ids:
                 if not is_manager:
+                    # they have subordinates but are not yet a manager. add them to the
+                    # group.
                     user.groups_id = [(4, manager_group_id, False)]
             else:
                 if is_manager:
+                    # they don't have subordinates but are currently a manager. remove
+                    # them from the group.
                     user.groups_id = [(3, manager_group_id, False)]
-
-    def _get_manager_group_id(self):
-        return self.env["ir.model.data"].search(MANAGER_GROUP_DOMAIN).res_id

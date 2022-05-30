@@ -17,7 +17,7 @@
     ],
     "excludes": [],
     "data": [
-        "security/security.xml",
+        "security/res_groups.xml",
     ],
     "demo": [],
     "qweb": [],
