@@ -9,7 +9,7 @@
     "version": "12.0.1.0.0",
     "category": "Human Resources",
     "website": "https://coopiteasy.be",
-    "author": "Coop IT Easy SCRLfs",
+    "author": "Coop IT Easy SC",
     "license": "AGPL-3",
     "application": False,
     "depends": [
