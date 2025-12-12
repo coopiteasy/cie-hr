@@ -45,6 +45,7 @@ repos:
       - id: oca-update-pre-commit-excluded-addons
       - id: oca-fix-manifest-website
         args: ["https://github.com/coopiteasy/cie-hr"]
+        exclude: ^hr_attendance_work_entry/
       - id: oca-gen-addon-readme
         args:
           - --addons-dir=.

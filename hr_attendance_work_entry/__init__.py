@@ -9,7 +9,8 @@ def attn_payroll_pre_init_hook(cr):
     then the uniqueness constraint will prevent this module
     from installing.
     """
-    cr.execute("UPDATE hr_work_entry_type "
-               "SET code = 'ATTN-PRE-INSTALL' "
-               "WHERE code = 'ATTN';"
-               )
+    cr.execute(
+        "UPDATE hr_work_entry_type "
+        "SET code = 'ATTN-PRE-INSTALL' "
+        "WHERE code = 'ATTN';"
+    )
