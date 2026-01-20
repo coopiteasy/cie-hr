@@ -46,9 +46,17 @@ class HrContract(models.Model):
         # the data processed here is for one employee only.
         intervals = []
         # TODO: compare hr_attendances and contract_intervals
+        # the dates in the intervals in contract_intervals have a timezone,
+        # while the check_in and check_out fields of hr.attendance are naive
+        # utc datetime values. the returned intervals must contain dates with
+        # a timezone.
         for hr_attendance in hr_attendances:
             intervals.append(
-                (hr_attendance.check_in, hr_attendance.check_out, hr_attendance)
+                (
+                    pytz.utc.localize(hr_attendance.check_in),
+                    pytz.utc.localize(hr_attendance.check_out),
+                    hr_attendance,
+                )
             )
         return WorkIntervals(intervals)
 
