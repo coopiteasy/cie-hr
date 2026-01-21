@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 from collections import defaultdict
+from datetime import timedelta
 
 import pytz
 
@@ -25,27 +26,42 @@ class HrContract(models.Model):
             [
                 ("employee_id", "=", self.employee_id.id),
                 "|",
+                # attendances fully contained in the interval
                 "&",
                 ("check_in", ">=", start_dt),
                 ("check_out", "<=", end_dt),
                 "|",
+                # attendances overlapping the start of the interval
                 "&",
                 ("check_in", "<", start_dt),
                 ("check_out", ">", start_dt),
+                "|",
+                # attendances overlapping the end of the interval
                 "&",
                 ("check_in", "<", end_dt),
                 ("check_out", ">", end_dt),
+                # attendances that are still open and that started in the
+                # interval
+                "&",
+                ("check_out", "=", False),
+                "&",
+                ("check_in", ">=", start_dt),
+                ("check_in", "<=", end_dt),
             ]
         )
 
-    def _constrain_hr_attendances_to_contract(self, hr_attendances, contract_intervals):
+    def _constrain_hr_attendances_to_contract(
+        self, hr_attendances, contract_intervals, now
+    ):
         """
         Compute work intervals from the attendances constrained to the
-        contract attendance intervals.
+        contract attendance intervals, and drop all intervals that end after
+        now.
         """
         # the data processed here is for one employee only.
         intervals = []
-        # TODO: compare hr_attendances and contract_intervals
+        # limit date for attendances that don't have a check_out date.
+        limit_dt = (now + timedelta(minutes=1)).replace(tzinfo=None)
         # the dates in the intervals in contract_intervals have a timezone,
         # while the check_in and check_out fields of hr.attendance are naive
         # utc datetime values. the returned intervals must contain dates with
@@ -54,7 +70,7 @@ class HrContract(models.Model):
             intervals.append(
                 (
                     pytz.utc.localize(hr_attendance.check_in),
-                    pytz.utc.localize(hr_attendance.check_out),
+                    pytz.utc.localize(hr_attendance.check_out or limit_dt),
                     hr_attendance,
                 )
             )
@@ -64,7 +80,8 @@ class HrContract(models.Model):
         # the hr.attendance record.
         presence_intervals = hr_attendance_intervals & contract_intervals
         absence_intervals = contract_intervals - hr_attendance_intervals
-        return presence_intervals | absence_intervals
+        all_intervals = presence_intervals | absence_intervals
+        return WorkIntervals(filter(lambda x: x[1] < now, all_intervals))
 
     def _get_attendance_intervals(self, start_dt, end_dt):
         result = super(
@@ -91,11 +108,12 @@ class HrContract(models.Model):
                     tz=pytz.timezone(calendar.tz),
                 )
             )
+        now = pytz.utc.localize(fields.Datetime.now())
         for contract in contracts:
             hr_attendances = contract._get_hr_attendances(start_dt, end_dt)
             resource_id = contract.employee_id.resource_id.id
             intervals = contract._constrain_hr_attendances_to_contract(
-                hr_attendances, contract_intervals[resource_id]
+                hr_attendances, contract_intervals[resource_id], now
             )
             result[resource_id] = intervals
         return result
