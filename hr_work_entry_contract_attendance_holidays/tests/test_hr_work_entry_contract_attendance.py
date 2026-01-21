@@ -59,3 +59,6 @@ class TestHRWorkEntryContractAttendance(TransactionCase):
     # not covered by attendances (but when? when a new (later) attendance is
     # created: fill the gaps, or when the work entries are (re)generated
     # manually)
+
+    # test that a conflict is generated in case of an attendance overlapping a
+    # leave.

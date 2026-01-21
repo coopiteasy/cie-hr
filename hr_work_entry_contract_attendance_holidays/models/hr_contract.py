@@ -58,7 +58,13 @@ class HrContract(models.Model):
                     hr_attendance,
                 )
             )
-        return WorkIntervals(intervals)
+        hr_attendance_intervals = WorkIntervals(intervals)
+        # intersection with the attendances first return the attendance
+        # intervals constrained to the contract intervals, but still linked to
+        # the hr.attendance record.
+        presence_intervals = hr_attendance_intervals & contract_intervals
+        absence_intervals = contract_intervals - hr_attendance_intervals
+        return presence_intervals | absence_intervals
 
     def _get_attendance_intervals(self, start_dt, end_dt):
         result = super(
