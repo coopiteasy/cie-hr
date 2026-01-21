@@ -122,10 +122,8 @@ class HrContract(models.Model):
         if self.work_entry_source != "contract_attendance":
             return super()._get_interval_work_entry_type(interval)
         if interval[2]._name == "hr.attendance":
-            # FIXME: make this configurable and avoid searching it at each call
-            return self.env["hr.work.entry.type"].search([("code", "=", "WORK100")])
-        # FIXME: same as above
-        return self.env["hr.work.entry.type"].search([("code", "=", "LEAVE90")])
+            return self.env.company.attendance_hr_work_entry_type_id
+        return self.env.company.absence_hr_work_entry_type_id
 
     def _get_more_vals_attendance_interval(self, interval):
         result = super()._get_more_vals_attendance_interval(interval)
