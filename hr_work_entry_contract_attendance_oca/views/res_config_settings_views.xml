@@ -6,9 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <odoo>
     <record id="res_config_settings_view_form" model="ir.ui.view">
-        <field
-            name="name"
-        >res.config.settings.view.form.inherit.hr.work.entry.contract.attendance.holidays</field>
+        <field name="name">res.config.settings.view.form.inherit</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="hr.res_config_settings_view_form" />
         <field name="arch" type="xml">
@@ -21,14 +19,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                         help="Work entry type to use for work entries corresponding to an attendance."
                     >
                         <field name="attendance_hr_work_entry_type_id" required="1" />
-                    </setting>
-                    <setting
-                        company_dependent="1"
-                        string="Absence Work Entry Type"
-                        id="absence_hr_work_entry_type"
-                        help="Work entry type to use for work entries corresponding to an absence."
-                    >
-                        <field name="absence_hr_work_entry_type_id" required="1" />
                     </setting>
                 </block>
             </xpath>

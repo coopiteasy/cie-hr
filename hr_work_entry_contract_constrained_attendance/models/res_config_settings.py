@@ -8,9 +8,6 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    attendance_hr_work_entry_type_id = fields.Many2one(
-        related="company_id.attendance_hr_work_entry_type_id", readonly=False
-    )
     absence_hr_work_entry_type_id = fields.Many2one(
         related="company_id.absence_hr_work_entry_type_id", readonly=False
     )

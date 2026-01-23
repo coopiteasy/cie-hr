@@ -11,16 +11,8 @@ class ResCompany(models.Model):
     def _get_default_attendance_hr_work_entry_type(self):
         return self.env.ref("hr_work_entry.work_entry_type_attendance")
 
-    def _get_default_absence_hr_work_entry_type(self):
-        return self.env.ref("hr_work_entry_contract.work_entry_type_unpaid_leave")
-
     attendance_hr_work_entry_type_id = fields.Many2one(
         "hr.work.entry.type",
         "Attendance Work Entry Type",
         default=_get_default_attendance_hr_work_entry_type,
-    )
-    absence_hr_work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type",
-        "Absence Work Entry Type",
-        default=_get_default_absence_hr_work_entry_type,
     )
