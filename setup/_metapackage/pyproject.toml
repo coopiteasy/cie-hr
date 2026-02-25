@@ -1,0 +1,11 @@
+[project]
+name = "odoo-addons-coopiteasy-cie-hr"
+version = "18.0.20260225.0"
+dependencies = [
+    "odoo-addon-hr_work_entry_group_s==18.0.*",
+]
+classifiers=[
+    "Programming Language :: Python",
+    "Framework :: Odoo",
+    "Framework :: Odoo :: 18.0",
+]

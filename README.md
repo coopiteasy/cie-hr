@@ -17,7 +17,11 @@ Odoo modules related to Human Resources management
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[hr_work_entry_group_s](hr_work_entry_group_s/) | 18.0.1.0.0 | <a href='https://github.com/mihien'><img src='https://github.com/mihien.png' width='32' height='32' style='border-radius:50%;' alt='mihien'/></a> | Export the work entries of employees in the SAIAU format
 
 [//]: # (end addons)
 
